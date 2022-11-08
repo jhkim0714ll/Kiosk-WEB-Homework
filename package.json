@@ -1,0 +1,24 @@
+{
+  "name": "kiosk-web-homework",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "src/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rlawnsgh714/Kiosk-WEB-Homework.git"
+  },
+  "author": "rlawnsgh714",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rlawnsgh714/Kiosk-WEB-Homework/issues"
+  },
+  "homepage": "https://github.com/rlawnsgh714/Kiosk-WEB-Homework#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "sqlite3": "^5.1.2"
+  }
+}
