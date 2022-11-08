@@ -1,7 +1,7 @@
 import express from "express";
 import morgan from "morgan";
-import authRouter from "./router/auth";
-import userRouter from "./router/user";
+import authRouter from "./router/authRouter";
+import userRouter from "./router/userRouter";
 import cors from "cors";
 
 var app = express();
@@ -16,11 +16,9 @@ app.use("/users", userRouter);
 app.use("/auth", authRouter);
 
 const handleListening = () => {
-  console.log(
-    `✅ Server listenting on port http://localhost:${PORT || 3000} 🚀`
-  );
+  console.log(`✅ Server listenting on port http://localhost:${3000} 🚀`);
 };
 
-app.listen(PORT, handleListening);
+app.listen(3000, handleListening);
 
 export default app;
