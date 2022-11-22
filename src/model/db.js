@@ -5,7 +5,7 @@ const sqlite = sqlite3.verbose();
 function getConnection() {
   const db = new sqlite.Database("./test.db", (err) => {
     if (err) {
-      console.log(err.message);
+      console.log(`❌ ${err.message}`);
     }
   });
   return db;

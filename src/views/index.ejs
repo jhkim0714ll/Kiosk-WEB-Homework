@@ -5,8 +5,112 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <style>
+      #product {
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
-    index
+    <div class="homebar">
+      주문하려면 메뉴를 클릭해주세요
+      <button id="homebar_button" onclick="location.href='/home'">
+        <h3>시작화면</h3>
+      </button>
+    </div>
+    <br />
+    <div class="all_product">
+      <% for ( var i = 0 ; i < product.length; i++ ) { %>
+      <div
+        class="product"
+        onclick="buy('<%= product[i].name %>','<%= product[i].money %>')"
+      >
+        <img src="<%= product[i].image %>" width="100" height="100" />
+        <p><%= product[i].name %><br /><%= product[i].money %>원</p>
+      </div>
+      <% } %>
+    </div>
+    <div class="shopping_basket">
+      <div class="shopping_basket_img">
+        <img src="../../uploads/shoppingBasket.png" width="30" height="30" />
+        <h3>장바구니</h3>
+      </div>
+      <div id="buy_products">
+        <button onclick="location.reload()">전체 취소</button>
+        <div id="buy_product"></div>
+        <div class="total_price"></div>
+      </div>
+    </div>
   </body>
+
+  <script>
+    var list = [];
+    let productNumber = 0;
+
+    function buy(name, money) {
+      const data = {
+        id: productNumber++,
+        name,
+        money,
+      };
+      list.push(data);
+      window.localStorage.setItem("data", JSON.stringify(list));
+      printBuyProduct();
+    }
+
+    function printBuyProduct() {
+      // 그려주는 함수
+      const buy_product_div = document.querySelector("#buy_product");
+      buy_product_div.innerHTML = "";
+
+      const data = window.localStorage.getItem("data");
+      const parsingData = JSON.parse(data);
+      console.log(parsingData);
+
+      let tagArea = document.getElementById("buy_product");
+
+      const productDiv = document.getElementById("product_div");
+      if (productDiv) {
+        productDiv.remove();
+      }
+
+      for (let i = 0; i < parsingData.length; i++) {
+        let productDivTag = document.createElement("div");
+        productDivTag.setAttribute("id", `product_div`);
+
+        let productPTag = document.createElement("p");
+
+        productPTag.setAttribute("id", "pTag");
+        productPTag.innerHTML = `${parsingData[i].name} <br /> ${parsingData[i].money}원`;
+
+        productDivTag.appendChild(productPTag);
+
+        let cancelButtonTag = document.createElement("button");
+
+        cancelButtonTag.setAttribute("id", "cancel_buy_product");
+        // cancelButtonTag.setAttribute(
+        //   "onclick",
+        //   `cancelBuyProduct(${parsingData[i].id})`
+        // );
+
+        cancelButtonTag.addEventListener("click", () =>
+          cancelBuyProduct(parsingData[i].id)
+        );
+
+        cancelButtonTag.innerHTML = `취소버튼`;
+        productDivTag.appendChild(cancelButtonTag);
+
+        tagArea.appendChild(productDivTag);
+      }
+    }
+
+    function cancelBuyProduct(num) {
+      for (let i = 0; i < list.length; i++) {
+        if (num == i) {
+          list.splice(i, 1);
+          break;
+        }
+      }
+    }
+  </script>
 </html>

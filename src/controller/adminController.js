@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken";
 import { tokenSecret } from "../config/secret";
+import { executeSelect } from "../model/db";
+import { findAllProduct } from "../model/repository/product";
 
 export const loginPage = (req, res) => {
   res.render("login");
@@ -24,6 +26,8 @@ export const login = (req, res) => {
   res.redirect("/admin");
 };
 
-export const adminPage = (req, res) => {
-  res.render("admin");
+export const adminPage = async (req, res) => {
+  const product = await executeSelect(findAllProduct());
+
+  return res.render("admin", { product: product });
 };

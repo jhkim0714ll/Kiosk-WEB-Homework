@@ -1,5 +1,4 @@
 export const createProductTable = () => {
-  console.log("🔀 Product DB Created!");
   return `create table if not exists product (
     id integer primary key autoincrement , 
     name text NOT NULL, 
@@ -14,18 +13,22 @@ export const findAllProduct = () => {
 };
 
 export const findOneProduct = (id) => {
-  return `select * from product where id = '${id}'`;
+  return `select * from product where id = ${id}`;
 };
 
 export const insertProduct = (name, money, image, type) => {
   return `insert into product(name, money, image, type) 
-  values('${name}', '${money}', '${image}', '${type}',)`;
+  values ( '${name}', '${money}', '${image}', '${type}' )`;
 };
 
 export const updateProduct = (id, name, money, image, type) => {
   return `update product set name = '${name}', money = '${money}', image = '${image}', type = '${type}' where id = ${id}`;
 };
 
-export const deleteProduct = (id) => {
+export const deleteProductById = (id) => {
   return `delete from product where id = ${id}`;
+};
+
+export const deleteAllProduct = (id) => {
+  return `delete from product`;
 };

@@ -1,49 +1,64 @@
-import { executeSql } from "../model/db";
+import { executeSelect, executeSql } from "../model/db";
 import {
-  deleteProduct,
+  deleteProductById,
+  deleteAllProduct,
   findAllProduct,
   findOneProduct,
   insertProduct,
   updateProduct,
 } from "../model/repository/product";
 
-export const getAllProduct = (req, res) => {
-  const product = executeSql(findAllProduct());
+export const getAllProduct = async (req, res) => {
+  const product = await executeSelect(findAllProduct());
   return res.render("admin", { product: product });
 };
 
-export const getOneProduct = (req, res) => {
+export const getOneProduct = async (req, res) => {
   const { id } = req.params;
 
-  const product = executeSql(findOneProduct(id));
-  return res.render("admin", { product: product });
+  const product = await executeSelect(findOneProduct(id));
+  return res.render("viewProduct", { product: product[0] });
 };
 
 export const createProductPage = (req, res) => {
   return res.render("ctrlProduct", { isUpdate: false });
 };
 
-export const updateProductPage = (req, res) => {
-  return res.render("ctrlProduct", { isUpdate: true });
+export const updateProductPage = async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+
+  const product = await executeSelect(findOneProduct(id));
+
+  return res.render("ctrlProduct", { isUpdate: true, product: product[0] });
 };
 
-export const createProduct = (req, res) => {
+export const createProduct = async (req, res) => {
   const { name, money, image, type } = req.body;
 
-  executeSql(insertProduct(name, money, image, type));
+  await executeSql(insertProduct(name, money, image, type));
   return res.redirect("/admin");
 };
 
-export const updateProductById = (req, res) => {
+export const updateProductById = async (req, res) => {
   const { name, money, image, type } = req.body;
   const { id } = req.params;
-  executeSql(updateProduct(id, name, money, image, type));
-  return res.render("ctrlProduct", { isUpdate: true });
+
+  await executeSql(updateProduct(id, name, money, image, type));
+  return res.redirect("/admin");
 };
 
-export const removeProduct = (req, res) => {
+export const removeProduct = async (req, res) => {
   const { id } = req.params;
 
-  executeSql(deleteProduct(id));
+  await executeSql(deleteProductById(id));
   return res.redirect("/admin");
+};
+
+export const removeAllProduct = async (req, res) => {
+  await executeSql(deleteAllProduct());
+  return res.status(200).json({
+    status: 200,
+    message: "상품 데이터 모두 삭제 성공",
+  });
 };

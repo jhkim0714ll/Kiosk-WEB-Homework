@@ -7,6 +7,7 @@ import {
   updateProductPage,
   getAllProduct,
   getOneProduct,
+  removeProduct,
 } from "../controller/productController";
 import { authorizeAccess } from "../middleware";
 
@@ -20,10 +21,13 @@ adminRouter.get("/product/search/:id", authorizeAccess, getOneProduct);
 adminRouter.get("/product/create", authorizeAccess, createProductPage);
 adminRouter.post("/product", authorizeAccess, createProduct);
 
-adminRouter.get("/product/update", authorizeAccess, updateProductPage);
-adminRouter.patch("/product/update/:id", authorizeAccess, updateProductById);
+adminRouter.get("/product/update/:id", authorizeAccess, updateProductPage);
+adminRouter.put("/product/update/:id", authorizeAccess, updateProductById);
 
-adminRouter.delete("/product", authorizeAccess);
+adminRouter.delete("/product/:id", authorizeAccess, removeProduct);
+
+adminRouter.get("/spend", authorizeAccess);
+adminRouter.get("/spend/:id", authorizeAccess);
 
 adminRouter.get("/login", loginPage);
 adminRouter.post("/login", login);
