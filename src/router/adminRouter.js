@@ -11,6 +11,12 @@ import {
 } from "../controller/productController";
 import { authorizeAccess } from "../middleware";
 
+import multer from "multer";
+
+export const upload = multer({
+  dest: "uploads/",
+});
+
 const adminRouter = express.Router();
 
 adminRouter.get("/", authorizeAccess, adminPage);
@@ -19,10 +25,20 @@ adminRouter.get("/product", authorizeAccess, getAllProduct);
 adminRouter.get("/product/search/:id", authorizeAccess, getOneProduct);
 
 adminRouter.get("/product/create", authorizeAccess, createProductPage);
-adminRouter.post("/product", authorizeAccess, createProduct);
+adminRouter.post(
+  "/product",
+  authorizeAccess,
+  upload.single("file"),
+  createProduct
+);
 
 adminRouter.get("/product/update/:id", authorizeAccess, updateProductPage);
-adminRouter.put("/product/update/:id", authorizeAccess, updateProductById);
+adminRouter.put(
+  "/product/update/:id",
+  authorizeAccess,
+  upload.single("file"),
+  updateProductById
+);
 
 adminRouter.delete("/product/:id", authorizeAccess, removeProduct);
 

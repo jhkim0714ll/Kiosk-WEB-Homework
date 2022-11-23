@@ -6,6 +6,9 @@ import {
   indexPage,
   spend,
 } from "../controller/indexController";
+import multer from "multer";
+
+export const upload = multer();
 
 const indexRouter = express.Router();
 

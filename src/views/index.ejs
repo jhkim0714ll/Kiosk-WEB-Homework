@@ -6,8 +6,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <style>
-      #product {
+      .product {
+        width: 100px;
+        height: 150px;
         cursor: pointer;
+        border-radius: 5px;
+        border: 1px solid #c4c4c4;
+        padding: 4px;
+      }
+      .all_product {
+        padding: 15px;
+        flex-wrap: wrap;
+        display: flex;
+        gap: 8px;
+        overflow: auto;
+        height: 296px;
+      }
+      .price_name_wrap {
+        text-align: center;
+      }
+      #product_name {
+        font-size: 0.87rem;
+        font-weight: bold;
+        color: rgb(237, 88, 88);
+        margin-bottom: 3px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      #product_price {
+        font-size: 0.8rem;
+        color: #818181;
+      }
+      #product_price::before {
+        content: "₩";
+        padding-right: 3px;
+      }
+      .basket_vacate {
+        width: 100px;
+        padding: 14px 8px;
+        outline: none;
+        background-color: rgb(0, 0, 46);
+        border: none;
+        border-radius: 3px;
+        color: #fff;
+        font-size: 1rem;
+        margin-right: 10px;
+      }
+      #buy_product {
+        padding: 20px;
+        height: 250px;
+        font-size: 0.9rem;
+        border-top: 3px solid #333;
+        margin-top: 10px;
+        height: 245px;
+        overflow: auto;
+      }
+      #buy_products {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+      #all_price {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: calc(100% - 210px);
+        font-size: 1.15rem;
+      }
+      .bottom_wrap {
+        display: flex;
+        border-top: 3px solid #333;
+        padding-top: 10px;
+      }
+      .order {
+        width: 100px;
+        padding: 14px 8px;
+        outline: none;
+        background-color: rgb(0, 0, 46);
+        border: none;
+        border-radius: 3px;
+        color: #fff;
+        font-size: 1rem;
       }
     </style>
   </head>
@@ -23,39 +103,66 @@
       <% for ( var i = 0 ; i < product.length; i++ ) { %>
       <div
         class="product"
-        onclick="buy('<%= product[i].name %>','<%= product[i].money %>')"
+        onclick="buy('<%= product[i].name %>','<%= product[i].price %>')"
       >
         <img src="<%= product[i].image %>" width="100" height="100" />
-        <p><%= product[i].name %><br /><%= product[i].money %>원</p>
+        <div class="price_name_wrap">
+          <div id="product_name"><%= product[i].name %></div>
+          <div id="product_price"><%= product[i].price %>원</div>
+        </div>
       </div>
       <% } %>
     </div>
     <div class="shopping_basket">
-      <div class="shopping_basket_img">
-        <img src="../../uploads/shoppingBasket.png" width="30" height="30" />
-        <h3>장바구니</h3>
-      </div>
       <div id="buy_products">
-        <button onclick="location.reload()">전체 취소</button>
         <div id="buy_product"></div>
-        <div class="total_price"></div>
+        <div class="bottom_wrap">
+          <div id="all_price"></div>
+          <button class="basket_vacate" onclick="location.reload()">
+            모두 비우기
+          </button>
+          <button class="order" onclick="order()">주문하기</button>
+        </div>
       </div>
     </div>
   </body>
 
   <script>
+    window.onload = () => {
+      totalPrice();
+      window.localStorage.removeItem("data");
+    };
+
     var list = [];
     let productNumber = 0;
 
-    function buy(name, money) {
+    function buy(name, price) {
+      if (list) {
+        for (let i = 0; i < list.length; i++) {
+          if (list[i].name == name && list[i].price == price) {
+            list[i].amount++;
+
+            // window.localStorage.removeItem("data");
+            // window.localStorage.setItem("data", JSON.stringify(parsingData));
+            const pTag = document.getElementById(`pTag${i}`);
+            pTag.innerText = `${list[i].name} ${list[i].amount}`;
+            totalPrice();
+            return;
+          }
+        }
+      }
+
+      price = Number(price);
       const data = {
         id: productNumber++,
         name,
-        money,
+        price,
+        amount: 1,
       };
       list.push(data);
-      window.localStorage.setItem("data", JSON.stringify(list));
+      // window.localStorage.setItem("data", JSON.stringify(list));
       printBuyProduct();
+      totalPrice();
     }
 
     function printBuyProduct() {
@@ -65,52 +172,112 @@
 
       const data = window.localStorage.getItem("data");
       const parsingData = JSON.parse(data);
-      console.log(parsingData);
 
       let tagArea = document.getElementById("buy_product");
 
-      const productDiv = document.getElementById("product_div");
-      if (productDiv) {
-        productDiv.remove();
-      }
-
-      for (let i = 0; i < parsingData.length; i++) {
+      for (let i = 0; i < list.length; i++) {
         let productDivTag = document.createElement("div");
-        productDivTag.setAttribute("id", `product_div`);
+        productDivTag.setAttribute("id", `product_div${i}`);
+        productDivTag.style.display = "flex";
+        productDivTag.style.alignItems = "center";
+        productDivTag.style.justifyContent = "space-between";
+        productDivTag.style.borderBottom = "1px solid #c4c4c4";
 
         let productPTag = document.createElement("p");
 
-        productPTag.setAttribute("id", "pTag");
-        productPTag.innerHTML = `${parsingData[i].name} <br /> ${parsingData[i].money}원`;
+        productPTag.setAttribute("id", `pTag${i}`);
+        productPTag.innerHTML = `${list[i].name} ${list[i].amount}`;
 
         productDivTag.appendChild(productPTag);
+
+        let addAmountButton = document.createElement("button");
+        addAmountButton.innerText = "+";
+
+        //todo
+        addAmountButton.addEventListener("click", () => {
+          list[i].amount++;
+          productPTag.innerHTML = `${list[i].name} ${list[i].amount}`;
+          totalPrice();
+        });
+        productDivTag.appendChild(addAmountButton);
+
+        let minusAmountButton = document.createElement("button");
+        minusAmountButton.innerText = "-";
+
+        //todo
+        minusAmountButton.addEventListener("click", () => {
+          if (list[i].amount > 0) {
+            list[i].amount--;
+            if (list[i].amount == 0) {
+              list.splice(i, 1);
+              productDivTag.remove();
+              totalPrice();
+              return;
+            }
+            productPTag.innerHTML = `${list[i].name} ${list[i].amount}`;
+            totalPrice();
+          }
+        });
+        productDivTag.appendChild(minusAmountButton);
 
         let cancelButtonTag = document.createElement("button");
 
         cancelButtonTag.setAttribute("id", "cancel_buy_product");
-        // cancelButtonTag.setAttribute(
-        //   "onclick",
-        //   `cancelBuyProduct(${parsingData[i].id})`
-        // );
 
         cancelButtonTag.addEventListener("click", () =>
-          cancelBuyProduct(parsingData[i].id)
+          cancelBuyProduct(i, list[i].name)
         );
 
-        cancelButtonTag.innerHTML = `취소버튼`;
+        cancelButtonTag.innerHTML = `X`;
+        cancelButtonTag.style.outline = "none";
+        cancelButtonTag.style.border = "none";
+        cancelButtonTag.style.width = "30px";
+        cancelButtonTag.style.height = "30px";
+        cancelButtonTag.style.borderRadius = "50%";
+        cancelButtonTag.style.backgroundColor = "#c4c4c4";
+        cancelButtonTag.style.display = "flex";
+        cancelButtonTag.style.justifyContent = "center";
+        cancelButtonTag.style.alignItems = "center";
+
         productDivTag.appendChild(cancelButtonTag);
 
         tagArea.appendChild(productDivTag);
       }
+
+      // window.localStorage.removeItem("data");
+      // window.localStorage.setItem("data", JSON.stringify(parsingData));
     }
 
-    function cancelBuyProduct(num) {
+    function cancelBuyProduct(num, productName) {
+      const buy_product_div = document.querySelector(`#product_div${num}`);
+      buy_product_div.innerHTML = "";
       for (let i = 0; i < list.length; i++) {
-        if (num == i) {
+        if (list[i].name == productName) {
           list.splice(i, 1);
-          break;
         }
       }
+      // window.localStorage.removeItem("data");
+      // window.localStorage.setItem("data", JSON.stringify(list));
+      printBuyProduct();
+      totalPrice();
+    }
+
+    function order() {
+      alert("주문이 완료되었습니다.");
+      $.ajax({});
+      window.location.href = "/home";
+    }
+
+    function totalPrice() {
+      let total = 0;
+      for (let i = 0; i < list.length; i++) {
+        total += list[i].price * list[i].amount;
+      }
+      if (total <= 0) {
+        total = 0;
+      }
+      const all_price = document.getElementById("all_price");
+      all_price.innerText = `주문 금액 ${total}원`;
     }
   </script>
 </html>

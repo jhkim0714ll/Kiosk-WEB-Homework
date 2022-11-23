@@ -34,17 +34,22 @@ export const updateProductPage = async (req, res) => {
 };
 
 export const createProduct = async (req, res) => {
-  const { name, money, image, type } = req.body;
+  const { name, price, type } = req.body;
 
-  await executeSql(insertProduct(name, money, image, type));
+  console.log(req.file);
+  let fileUrl = "";
+  if (req.file) {
+    fileUrl = "/uploads/" + req.file.filename;
+  }
+  executeSql(insertProduct(name, price, fileUrl, type));
   return res.redirect("/admin");
 };
 
 export const updateProductById = async (req, res) => {
-  const { name, money, image, type } = req.body;
+  const { name, price, image, type } = req.body;
   const { id } = req.params;
 
-  await executeSql(updateProduct(id, name, money, image, type));
+  await executeSql(updateProduct(id, name, price, image, type));
   return res.redirect("/admin");
 };
 

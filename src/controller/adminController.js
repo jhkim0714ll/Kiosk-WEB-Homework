@@ -10,7 +10,7 @@ export const loginPage = (req, res) => {
 export const login = (req, res) => {
   const { id, password } = req.body;
   if (id != "admin" || password != "1234") {
-    return res.render("login", { ale: true });
+    return res.render("login", { wrong: "wrong" });
   }
   const token = jwt.sign(
     {

@@ -1,15 +1,16 @@
 import jwt from "jsonwebtoken";
 import multer from "multer";
 import { tokenSecret } from "./config/secret";
+import cookie from "cookie";
 
 export const authorizeAccess = (req, res, next) => {
-  const cookie = req.cookies;
-  if (cookie === undefined) {
+  const parseCookie = cookie.parse(req.headers.cookie);
+  if (parseCookie === undefined) {
     return res.redirect("/admin/login");
   }
-  jwt.verify(cookie.token, tokenSecret(), (error) => {
-    if (error) {
-      return res.redirect("/admin/login");
+  jwt.verify(parseCookie.token, tokenSecret(), (err) => {
+    if (err) {
+      console.log(err);
     } else {
       next();
     }

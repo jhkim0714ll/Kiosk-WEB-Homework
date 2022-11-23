@@ -10,19 +10,22 @@
     <h1>상품 관리</h1>
     <div>
       <% if(!isUpdate || product == null || product == undefined) {%>
-      <form action="/admin/product" method="post">
+      <form action="/admin/product" method="post" enctype="multipart/form-data">
         <input id="name" type="text" name="name" placeholder="이름" />
         <input
-          id="money"
+          id="price"
           type="text"
-          name="money"
+          name="price"
           placeholder="단가"
           onchange="checkNumber()"
         />
-        <input id="image" type="file" name="image" placeholder="이미지URL" />
+        <input id="image" type="file" />
         <input id="type" type="text" name="type" placeholder="상품 타입" />
         <button id="default_button" onclick="checkBlank()">등록</button>
       </form>
+      <button class="default_button" onclick="window.location.href='/admin'">
+        리스트
+      </button>
       <% } else { %>
       <form
         action="/admin/product/update/<%= product.id %>?_method=PUT"
@@ -30,45 +33,47 @@
       >
         <p>현 상품 이름 : <%= product.name %></p>
         <input id="name" type="text" name="name" placeholder="이름" />
-        <p>현 상품 단가 : <%= product.money %></p>
+        <p>현 상품 단가 : <%= product.price %></p>
         <input
-          id="money"
+          id="price"
           type="text"
-          name="money"
+          name="price"
           placeholder="단가"
           onchange="checkNumber()"
         />
         <p>현 상품 이미지</p>
         <img src="<%= product.image %>" width="100" height="100" />
         <br />
-        <input id="image" type="text" name="image" placeholder="이미지URL" />
+        <input id="file" type="file" name="file" />
         <p>현 상품 타입 : <%= product.type %></p>
         <input id="type" type="text" name="type" placeholder="상품 타입" />
-        <button id="default_button" onclick="checkBlank()">수정</button>
+        <button class="default_button" onclick="checkBlank()">수정</button>
       </form>
+      <button class="default_button" onclick="window.location.href='/admin'">
+        리스트
+      </button>
       <% } %>
     </div>
   </body>
 
   <script>
     function checkNumber() {
-      const moneyRules = "/^[0-9]+$/";
-      const money = document.getElementById("money").value;
+      const priceRules = "/^[0-9]+$/";
+      const price = document.getElementById("price").value;
 
-      if (!moneyRules.test(money)) {
+      if (!priceRules.test(price)) {
         alert("숫자만 입력가능합니다");
       }
     }
 
     function checkBlank() {
       const name = document.getElementById("name").value;
-      const money = document.getElementById("money").value;
+      const price = document.getElementById("price").value;
       const image = document.getElementById("image").value;
       const type = document.getElementById("type").value;
 
-      if (!name || !money || !image || !type) {
+      if (!name || !price || !image || !type) {
         alert("모든 칸을 채워주세요");
-        window.location;
       }
     }
   </script>
