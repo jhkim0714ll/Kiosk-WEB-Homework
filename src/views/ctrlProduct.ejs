@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>상품 관리</h1>
+    <div>
+      <% if(!isUpdate || product == null || product == undefined) {%>
+      <form action="/admin/product" method="post" enctype="multipart/form-data">
+        <input id="name" type="text" name="name" placeholder="이름" />
+        <input id="price" type="text" name="price" placeholder="단가" />
+        <input id="image" type="file" name="file" />
+        <input id="type" type="text" name="type" placeholder="상품 타입" />
+        <button id="default_button" onclick="checkBlank()">등록</button>
+      </form>
+      <button class="default_button" onclick="window.location.href='/admin'">
+        리스트
+      </button>
+      <% } else { %>
+      <form
+        action="/admin/product/update/<%= product.id %>?_method=PUT"
+        method="post"
+        enctype="multipart/form-data"
+      >
+        <p>현 상품 이름 : <%= product.name %></p>
+        <input id="name" type="text" name="name" placeholder="이름" />
+        <p>현 상품 단가 : <%= product.price %></p>
+        <input id="price" type="text" name="price" placeholder="단가" />
+        <p>현 상품 이미지</p>
+        <img src="<%= product.image %>" width="100" height="100" />
+        <br />
+        <input id="image" type="file" name="file" />
+        <p>현 상품 타입 : <%= product.type %></p>
+        <input id="type" type="text" name="type" placeholder="상품 타입" />
+        <button class="default_button" onclick="checkBlank()">수정</button>
+      </form>
+      <button class="default_button" onclick="window.location.href='/admin'">
+        리스트
+      </button>
+      <% } %>
+    </div>
+  </body>
+
+  <script>
+    function checkBlank() {
+      const name = document.getElementById("name").value;
+      const price = document.getElementById("price").value;
+      const image = document.getElementById("image").value;
+      const type = document.getElementById("type").value;
+
+      if (!name || !price || !image || !type) {
+        alert("모든 칸을 채워주세요");
+      }
+    }
+  </script>
+</html>
