@@ -4,13 +4,14 @@ import { tokenSecret } from "./config/secret";
 import cookie from "cookie";
 
 export const authorizeAccess = (req, res, next) => {
-  const parseCookie = cookie.parse(req.headers.cookie);
-  if (parseCookie === undefined) {
+  if (req.headers.cookie === undefined) {
     return res.redirect("/admin/login");
   }
+  const parseCookie = cookie.parse(req.headers.cookie);
   jwt.verify(parseCookie.token, tokenSecret(), (err) => {
     if (err) {
       console.log(err);
+      return res.redirect("/admin/login");
     } else {
       next();
     }

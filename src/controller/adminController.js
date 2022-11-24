@@ -2,9 +2,16 @@ import jwt from "jsonwebtoken";
 import { tokenSecret } from "../config/secret";
 import { executeSelect } from "../model/db";
 import { findAllProduct } from "../model/repository/product";
+import cookie from "cookie";
 
 export const loginPage = (req, res) => {
-  res.render("login");
+  if (req.headers.cookie == null || req.headers.cookie == undefined) {
+    return res.render("login");
+  }
+  const token = cookie.parse(req.headers.cookie);
+  if (token == null || token == undefined) {
+    return res.render("login");
+  } else return res.redirect("/admin");
 };
 
 export const login = (req, res) => {

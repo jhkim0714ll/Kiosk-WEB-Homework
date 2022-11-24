@@ -89,13 +89,38 @@
         color: #fff;
         font-size: 1rem;
       }
+      .homebar {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .homebar_button {
+        width: 380px;
+        padding: 10px;
+        background-color: #fff;
+        border: 1px solid #848484;
+        outline: none;
+        border-radius: 5px;
+        font-size: 0.9rem;
+        font-weight: bold;
+      }
+      .homebar_button:active {
+        transform: scale(0.95);
+      }
+      .menuSelect {
+        display: flex;
+        justify-content: center;
+      }
     </style>
   </head>
   <body>
     <div class="homebar">
-      주문하려면 메뉴를 클릭해주세요
-      <button id="homebar_button" onclick="location.href='/home'">
-        <h3>시작화면</h3>
+      <button class="homebar_button" onclick="location.href='/home'">
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/6490/6490332.png"
+          width="40px"
+          height="40px"
+        />
       </button>
     </div>
     <br />
@@ -142,8 +167,6 @@
           if (list[i].name == name && list[i].price == price) {
             list[i].amount++;
 
-            // window.localStorage.removeItem("data");
-            // window.localStorage.setItem("data", JSON.stringify(parsingData));
             const pTag = document.getElementById(`pTag${i}`);
             pTag.innerText = `${list[i].name} ${list[i].amount}`;
             totalPrice();
@@ -160,13 +183,11 @@
         amount: 1,
       };
       list.push(data);
-      // window.localStorage.setItem("data", JSON.stringify(list));
       printBuyProduct();
       totalPrice();
     }
 
     function printBuyProduct() {
-      // 그려주는 함수
       const buy_product_div = document.querySelector("#buy_product");
       buy_product_div.innerHTML = "";
 
@@ -193,7 +214,6 @@
         let addAmountButton = document.createElement("button");
         addAmountButton.innerText = "+";
 
-        //todo
         addAmountButton.addEventListener("click", () => {
           list[i].amount++;
           productPTag.innerHTML = `${list[i].name} ${list[i].amount}`;
@@ -204,18 +224,20 @@
         let minusAmountButton = document.createElement("button");
         minusAmountButton.innerText = "-";
 
-        //todo
         minusAmountButton.addEventListener("click", () => {
-          if (list[i].amount > 0) {
-            list[i].amount--;
-            if (list[i].amount == 0) {
-              list.splice(i, 1);
-              productDivTag.remove();
+          for (let j = 0; j < list.length; j++) {
+            if (!list[i]) i--;
+            if (list[j].name == list[i].name) {
+              list[j].amount--;
+              if (list[j].amount == 0) {
+                cancelBuyProduct(i, list[i].name);
+                totalPrice();
+                productDivTag.remove();
+                return;
+              }
               totalPrice();
-              return;
+              productPTag.innerHTML = `${list[i].name} ${list[i].amount}`;
             }
-            productPTag.innerHTML = `${list[i].name} ${list[i].amount}`;
-            totalPrice();
           }
         });
         productDivTag.appendChild(minusAmountButton);
@@ -243,9 +265,6 @@
 
         tagArea.appendChild(productDivTag);
       }
-
-      // window.localStorage.removeItem("data");
-      // window.localStorage.setItem("data", JSON.stringify(parsingData));
     }
 
     function cancelBuyProduct(num, productName) {
@@ -256,15 +275,17 @@
           list.splice(i, 1);
         }
       }
-      // window.localStorage.removeItem("data");
-      // window.localStorage.setItem("data", JSON.stringify(list));
       printBuyProduct();
       totalPrice();
     }
 
     function order() {
-      alert("주문이 완료되었습니다.");
-      $.ajax({});
+      const total = totalPrice();
+      if (total == 0) {
+        alert("상품을 선택해주세요");
+        return;
+      }
+      alert(`${total}금액으로 주문이 완료되었습니다.`);
       window.location.href = "/home";
     }
 
@@ -278,6 +299,9 @@
       }
       const all_price = document.getElementById("all_price");
       all_price.innerText = `주문 금액 ${total}원`;
+
+      window.localStorage.setItem("totalPrice", total);
+      return total;
     }
   </script>
 </html>

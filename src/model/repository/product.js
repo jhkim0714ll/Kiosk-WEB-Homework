@@ -16,6 +16,10 @@ export const findOneProduct = (id) => {
   return `select * from product where id = ${id}`;
 };
 
+export const findProductByName = (name) => {
+  return `select * from product where name = ${name}`;
+};
+
 export const insertProduct = (name, price, image, type) => {
   return `insert into product(name, price, image, type) 
   values ( '${name}', '${price}', '${image}', '${type}' )`;

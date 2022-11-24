@@ -9,7 +9,3 @@ export const indexPage = async (req, res) => {
 export const homePage = (req, res) => {
   return res.render("home");
 };
-
-export const getBuyProduct = async (req, res) => {};
-
-export const spend = async (req, res) => {};

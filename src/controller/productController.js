@@ -16,6 +16,10 @@ export const getAllProduct = async (req, res) => {
 export const getOneProduct = async (req, res) => {
   const { id } = req.params;
 
+  console.log(id);
+  if (id == undefined || id == "undefined") {
+    return;
+  }
   const product = await executeSelect(findOneProduct(id));
   return res.render("viewProduct", { product: product[0] });
 };
@@ -26,7 +30,6 @@ export const createProductPage = (req, res) => {
 
 export const updateProductPage = async (req, res) => {
   const { id } = req.params;
-  console.log(id);
 
   const product = await executeSelect(findOneProduct(id));
 
@@ -36,9 +39,10 @@ export const updateProductPage = async (req, res) => {
 export const createProduct = async (req, res) => {
   const { name, price, type } = req.body;
 
-  console.log(req.file);
+  let originalFileName = "";
   let fileUrl = "";
   if (req.file) {
+    originalFileName = req.file.originalname;
     fileUrl = "/uploads/" + req.file.filename;
   }
   executeSql(insertProduct(name, price, fileUrl, type));
@@ -46,10 +50,18 @@ export const createProduct = async (req, res) => {
 };
 
 export const updateProductById = async (req, res) => {
-  const { name, price, image, type } = req.body;
+  const { name, price, type } = req.body;
   const { id } = req.params;
 
-  await executeSql(updateProduct(id, name, price, image, type));
+  console.log(req.file);
+  let originalFileName = "";
+  let fileUrl = "";
+  if (req.file) {
+    originalFileName = req.file.originalname;
+    fileUrl = "/uploads/" + req.file.filename;
+  }
+
+  await executeSql(updateProduct(id, name, price, fileUrl, type));
   return res.redirect("/admin");
 };
 
