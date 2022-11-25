@@ -4,22 +4,73 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>메뉴 추가</title>
     <style>
       p {
         cursor: pointer;
       }
+      body {
+        margin: 0px;
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+      }
+      #add_menu {
+        width: 100%;
+        position: absolute;
+        bottom: 0px;
+        padding: 14px 0;
+        border: none;
+        background-color: rgb(255, 117, 117);
+        color: #fff;
+        font-size: 1rem;
+      }
+      h1 {
+        margin-bottom: 0px;
+        padding-bottom: 20px;
+        width: 100%;
+        text-align: center;
+
+        border-bottom: 1px solid #c4c4c4;
+      }
+      a {
+        color: #333;
+      }
+      .menu_link_container {
+        width: 100%;
+        overflow: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .menu_link {
+        display: flex;
+        justify-content: space-between;
+        width: calc(100% - 40px);
+        padding: 20px;
+        border-bottom: 1px solid #c4c4c4;
+      }
+      .menu_name {
+        font-size: 1.1rem;
+        font-weight: bold;
+      }
     </style>
   </head>
   <body>
-    <h1>관리자 페이지</h1>
-    <a href="/admin/product/create">메뉴 추가</a>
-    <% for(var i = 0 ;i < product.length; i++ ){ %>
-    <p>
-      <a href="/admin/product/search/<%= product[i].id %>">
-        <%= product[i].name %>
-      </a>
-    </p>
-    <% } %>
+    <h1>메뉴 추가 페이지</h1>
+    <div class="menu_link_container">
+      <% for(var i = 0 ;i < product.length; i++ ){ %>
+      <div class="menu_link">
+        <div class="menu_name"><%= product[i].name %></div>
+        <a href="/admin/product/search/<%= product[i].id %>"> 상세 페이지 </a>
+      </div>
+      <% } %>
+    </div>
+
+    <a href="/admin/product/create" id="add_menu">
+      <button id="add_menu">메뉴 추가</button></a
+    >
   </body>
 </html>

@@ -38,3 +38,7 @@ export const adminPage = async (req, res) => {
 
   return res.render("admin", { product: product });
 };
+
+export const logout = (req, res) => {
+  res.clearCookie("id").redirect("/admin/login");
+};

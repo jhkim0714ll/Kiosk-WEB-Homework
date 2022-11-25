@@ -1,5 +1,10 @@
 import express from "express";
-import { login, loginPage, adminPage } from "../controller/adminController";
+import {
+  login,
+  loginPage,
+  adminPage,
+  logout,
+} from "../controller/adminController";
 import {
   createProduct,
   updateProductById,
@@ -53,5 +58,6 @@ adminRouter.get("/spend/:id", authorizeAccess);
 
 adminRouter.get("/login", loginPage);
 adminRouter.post("/login", login);
+adminRouter.post("/logout", logout);
 
 export default adminRouter;
