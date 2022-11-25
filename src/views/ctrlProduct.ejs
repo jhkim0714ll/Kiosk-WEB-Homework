@@ -41,6 +41,11 @@
       <button class="default_button" onclick="window.location.href='/admin'">
         리스트
       </button>
+      <script>
+        document.getElementById("name").innerText = "<%= product.name %>";
+        document.getElementById("price").innerText = "<%= product.price %>";
+        document.getElementById("type").innerText = "<%= product.type %>";
+      </script>
       <% } %>
     </div>
   </body>

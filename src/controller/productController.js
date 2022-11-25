@@ -39,10 +39,8 @@ export const updateProductPage = async (req, res) => {
 export const createProduct = async (req, res) => {
   const { name, price, type } = req.body;
 
-  let originalFileName = "";
   let fileUrl = "";
   if (req.file) {
-    originalFileName = req.file.originalname;
     fileUrl = "/uploads/" + req.file.filename;
   }
   executeSql(insertProduct(name, price, fileUrl, type));
@@ -53,11 +51,8 @@ export const updateProductById = async (req, res) => {
   const { name, price, type } = req.body;
   const { id } = req.params;
 
-  console.log(req.file);
-  let originalFileName = "";
   let fileUrl = "";
   if (req.file) {
-    originalFileName = req.file.originalname;
     fileUrl = "/uploads/" + req.file.filename;
   }
 
