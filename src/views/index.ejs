@@ -159,7 +159,7 @@
     };
 
     var list = [];
-    let productNumber = 0;
+    var productNumber = 0;
 
     function buy(name, price) {
       if (list) {
@@ -190,9 +190,6 @@
     function printBuyProduct() {
       const buy_product_div = document.querySelector("#buy_product");
       buy_product_div.innerHTML = "";
-
-      const data = window.localStorage.getItem("data");
-      const parsingData = JSON.parse(data);
 
       let tagArea = document.getElementById("buy_product");
 
@@ -285,7 +282,7 @@
         alert("상품을 선택해주세요");
         return;
       }
-      alert(`${total}금액으로 주문이 완료되었습니다.`);
+      alert(`${total}원으로 주문이 완료되었습니다.`);
       window.location.href = "/home";
     }
 

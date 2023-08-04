@@ -6,7 +6,7 @@ import cookie from "cookie";
 
 export const loginPage = (req, res) => {
   if (req.headers.cookie == null || req.headers.cookie == undefined) {
-    return res.render("login");
+    return res.render("login", { failed: false });
   }
   const token = cookie.parse(req.headers.cookie);
   if (token == null || token == undefined) {
@@ -17,7 +17,7 @@ export const loginPage = (req, res) => {
 export const login = (req, res) => {
   const { id, password } = req.body;
   if (id != "admin" || password != "1234") {
-    return res.render("login", { wrong: "wrong" });
+    return res.render("login", { failed: true });
   }
   const token = jwt.sign(
     {
@@ -37,4 +37,8 @@ export const adminPage = async (req, res) => {
   const product = await executeSelect(findAllProduct());
 
   return res.render("admin", { product: product });
+};
+
+export const logout = (req, res) => {
+  res.clearCookie("id").redirect("/admin/login");
 };

@@ -13,5 +13,10 @@
       <input type="password" name="password" placeholder="비밀번호" />
       <button>로그인</button>
     </form>
+    <% if(failed) { %>
+    <script>
+      alert("비밀번호가 틀렸습니다");
+    </script>
+    <% } %>
   </body>
 </html>
